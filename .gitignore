@@ -8,3 +8,24 @@ backend/vendor/
 *.env
 backend/.env
 frontend/.env.local
+
+# Build files
+frontend/dist/
+frontend/build/
+frontend/public/build/
+frontend/public/assets/
+frontend/public/manifest.json
+frontend/public/robots.txt
+frontend/public/asset-manifest.json
+frontend/public/favicon.ico
+
+# Logs
+*.log
+*.log.*
+
+# IDE files
+.idea/
+*.vscode/
+
+# Docker files
+docker-compose.override.yml

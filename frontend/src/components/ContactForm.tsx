@@ -1,61 +1,63 @@
-'use client'; // this component uses hooks and browser APIs
+// frontend/src/components/ContactForm.tsx
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
+
+// Ensure the env var is defined at load‑time
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL
+if (!API_BASE) {
+    throw new Error('NEXT_PUBLIC_API_BASE_URL is not defined')
+}
 
 interface FormState {
-    name: string;
-    email: string;
-    message: string;
+    name: string
+    email: string
+    message: string
 }
 
 export default function ContactForm() {
-    const [form, setForm] = useState<FormState>({ name: '', email: '', message: '' });
-    const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-    const [errors, setErrors] = useState<Partial<FormState>>({});
+    const [form, setForm] = useState<FormState>({ name: '', email: '', message: '' })
+    const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+    const [errors, setErrors] = useState<Partial<FormState>>({})
 
-    // Update form state on input change
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        setForm({ ...form, [e.target.name]: e.target.value })
     }
 
     async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        setStatus('sending');
-        setErrors({});
+        e.preventDefault()
+        setStatus('sending')
+        setErrors({})
 
-        // 1. Initialize CSRF cookie
-        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL.replace('/api', '')}/sanctum/csrf-cookie`, {
+        // 1) Initialize CSRF cookie
+        await fetch(`${API_BASE!.replace('/api', '')}/sanctum/csrf-cookie`, {
             credentials: 'include',
-        });
+        })
 
-        // 2. POST the form data
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/contact`, {
+        // 2) Submit the form
+        const res = await fetch(`${API_BASE}/contact`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form),
-        });
+        })
 
         if (res.ok) {
-            setStatus('success');
-            setForm({ name: '', email: '', message: '' });
+            setStatus('success')
+            setForm({ name: '', email: '', message: '' })
         } else if (res.status === 422) {
-            const json = await res.json();
-            setErrors(json.errors || {});
-            setStatus('idle');
+            const json = await res.json()
+            setErrors(json.errors || {})
+            setStatus('idle')
         } else {
-            setStatus('error');
+            setStatus('error')
         }
     }
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {status === 'success' && (
-                <p className="text-green-600">Thanks! Your message has been sent.</p>
-            )}
-            {status === 'error' && (
-                <p className="text-red-600">Oops — something went wrong. Please try again.</p>
-            )}
+            {status === 'success' && <p className="text-green-600">Thanks! Your message has been sent.</p>}
+            {status === 'error' && <p className="text-red-600">Oops — something went wrong. Please try again.</p>}
 
             <div>
                 <label htmlFor="name" className="block text-sm font-medium">Name</label>
@@ -101,10 +103,10 @@ export default function ContactForm() {
             <button
                 type="submit"
                 disabled={status === 'sending'}
-                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
+                className="bg-accent text-white py-2 px-4 rounded hover:bg-accent/90 transition disabled:opacity-50"
             >
                 {status === 'sending' ? 'Sending…' : 'Send Message'}
             </button>
         </form>
-    );
+    )
 }

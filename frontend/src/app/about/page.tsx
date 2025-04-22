@@ -1,22 +1,37 @@
-// before the component
-export default async function AboutPage() {
-    const [aboutRes, eventsRes, skillsRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/about`),
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events`),
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/skills`),
-    ]);
+import Layout from '../../components/Layout'
+import Timeline from '../../components/Timeline'
+import SkillsGrid from '../../components/SkillsGrid'
+import { fetchAbout, fetchEvents, fetchSkills } from '../../lib/api'
 
-    const bioObj = await aboutRes.json();
-    const events = await eventsRes.json();
-    const skills = await skillsRes.json();
+export default async function AboutPage() {
+    const { bio } = await fetchAbout()
+    const events = await fetchEvents()
+    const skillsData = await fetchSkills()
 
     return (
         <Layout>
-            {/* … */}
-            <p className="text-lg">{bioObj.bio}</p>
-            {/* Timeline and SkillsGrid receive the fetched arrays */}
-            <Timeline events={events} />
-            <SkillsGrid skills={skills.map((s: { name: string }) => s.name)} />
+            <section className="my-16">
+                <h1 className="text-3xl md:text-4xl font-mono text-primary dark:text-white mb-6">
+                    About Me
+                </h1>
+                <p className="text-lg md:text-xl leading-relaxed text-secondary dark:text-gray-300">
+                    {bio}
+                </p>
+            </section>
+            {/* Timeline */}
+            <section className="my-16">
+                <h2 className="text-2xl font-mono text-primary dark:text-white mb-6">
+                    Career Timeline
+                </h2>
+                <Timeline events={events} />
+            </section>
+            {/* Skills */}
+            <section className="my-16">
+                <h2 className="text-2xl font-mono text-primary dark:text-white mb-6">
+                    Key Skills
+                </h2>
+                <SkillsGrid skills={skillsData.map((s) => s.name)} />
+            </section>
         </Layout>
-    );
+    )
 }
