@@ -1,0 +1,10 @@
+# Node modules
+frontend/node_modules/
+
+# Composer dependencies
+backend/vendor/
+
+# Environment files
+*.env
+backend/.env
+frontend/.env.local
