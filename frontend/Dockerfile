@@ -1,5 +1,5 @@
 # Use a compatible Node.js runtime for Next.js
-FROM node:20-alpine
+FROM node:23-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
