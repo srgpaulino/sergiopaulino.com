@@ -1,0 +1,23 @@
+import Layout from '../../components/Layout'
+import ProjectCard from '../../components/ProjectCard'
+
+export default async function ProjectsPage() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/projects`,
+    { cache: 'no-store' }
+  )
+  const projects = await res.json()
+
+  return (
+    <Layout>
+      <section className="py-16 px-4">
+        <h2 className="text-4xl font-bold text-center">Selected Projects</h2>
+        <div className="mt-8 grid md:grid-cols-2 gap-8">
+          {projects.map((p: any) => (
+            <ProjectCard key={p.id} project={p} />
+          ))}
+        </div>
+      </section>
+    </Layout>
+  )
+}
