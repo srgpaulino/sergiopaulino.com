@@ -21,6 +21,16 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('user_profiles', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('location')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+            $table->text('profile_summary')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

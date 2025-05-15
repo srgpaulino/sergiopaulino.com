@@ -9,8 +9,8 @@ class AboutController extends Controller
 {
 
     public function show()
-{
-    return About::firstOrFail();
-}
+    {
+        return About::where('user_id', 1)->firstOrFail();
+    }
 
 }

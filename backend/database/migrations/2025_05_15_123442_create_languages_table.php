@@ -4,33 +4,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateLanguagesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::create('abouts', function (Blueprint $table) {
+        Schema::create('languages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
                   ->constrained('users')
                   ->cascadeOnDelete();
-            $table->string('heading')->nullable();
-            $table->text('content');
+            $table->string('language');
+            $table->string('proficiency');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('abouts');
+        Schema::dropIfExists('languages');
     }
-};
+}

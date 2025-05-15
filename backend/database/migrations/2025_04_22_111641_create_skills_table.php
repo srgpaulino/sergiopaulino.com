@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
             $table->string('name');
             $table->unsignedInteger('order')->default(0);
             $table->timestamps();
